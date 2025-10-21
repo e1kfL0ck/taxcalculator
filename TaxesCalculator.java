@@ -8,14 +8,27 @@ public class TaxesCalculator {
     // Social security taxes, based on full income
     private final double SOC_SECURITY = 9.76;
     private final double SOC_HEALTH_SECURITY = 1.5;
-    private final double SOC_SICKNESS_SECURITY = 2.25;
-    private final double SOCIAL_HEALTH
+    private final double SOCIAL_HEALTH_1 = 9.00;
+    private final double SOCIAL_HEALTH_2 = 7.75;
+
+    //TODO: Why is set to 0 in the original code ?
+    //private final double SOC_SICKNESS_SECURITY = 2.45;
+    private final double SOC_SICKNESS_SECURITY = 0;
+
+
+    private final double ADVANCE_TAX = 18.00;
 
     private double income;
     private char contractType;
 
     private double taxDeductibleExpenses;
     private double taxFreeIncome;
+    private double securityHealthTaxes;
+    private double taxableIncome;
+    private double advanceTaxAmount;
+    private double reduceTaxAmount;
+    private double netIncome;
+    private double netIncomeOfTaxes;
 
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -28,10 +41,56 @@ public class TaxesCalculator {
 
     private void showSecurityHealthDetails() {
         System.out.println("Income basis for health social security : " + income);
-        System.out.println("Social security tax : "+SOC_SECURITY);
-        System.out.println("Health social security tax : " + SOC_HEALTH_SECURITY);
-        System.out.println("Sickness social security tax : " + SOC_SICKNESS_SECURITY);
+        System.out.println("Social security tax : " + SOC_SECURITY + "%");
+        System.out.println("Health social security tax : " + SOC_HEALTH_SECURITY + "%");
+        System.out.println("Sickness social security tax : " + SOC_SICKNESS_SECURITY + "%");
+        System.out.println("Social health tax : " + SOCIAL_HEALTH_1 + "%");
     }
 
+    private void calculateSecurityHealthDetails() {
+        securityHealthTaxes = income * (SOCIAL_HEALTH_1+SOC_SECURITY+SOC_SICKNESS_SECURITY+SOC_HEALTH_SECURITY) / 100;
+        System.out.println("Security health total taxes : " + securityHealthTaxes);
+    }
+
+    private void calculateTaxableIncome() {
+        System.out.println("Tax deductible expenses : " + taxDeductibleExpenses);
+        taxableIncome = income-taxDeductibleExpenses;
+        System.out.println("Taxable Income : " + taxableIncome);
+    }
+
+    private void calculateAdvanceTax() {
+        System.out.println("Advance tax : " + ADVANCE_TAX + "%");
+        advanceTaxAmount = taxableIncome*ADVANCE_TAX/100;
+        System.out.println("Advance tax amount : " + advanceTaxAmount);
+    }
+
+    private void calculateReducedTax() {
+        reduceTaxAmount = advanceTaxAmount-taxFreeIncome;
+        System.out.println("Reduced tax : " + reduceTaxAmount);
+    }
+    
+    private void calculateNetIncome() {
+        netIncome = income - securityHealthTaxes;
+        System.out.println("Net income : " + netIncome);
+    }
+
+    private void calculateNetIncomeOfTaxes() {
+        netIncomeOfTaxes = netIncome - reduceTaxAmount ;
+        System.out.println("Net income of taxes : " + netIncomeOfTaxes);
+    }
+
+
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+        TaxesCalculator p1 = new TaxesCalculator(1000, 'E');
+        p1.showSecurityHealthDetails();
+        p1.calculateSecurityHealthDetails();
+        p1.calculateTaxableIncome();
+        p1.calculateAdvanceTax();
+        p1.calculateReducedTax();
+        p1.calculateNetIncome();
+        p1.calculateNetIncomeOfTaxes();
+    }
 
 }
