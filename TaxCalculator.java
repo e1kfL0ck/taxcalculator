@@ -13,16 +13,18 @@ public class TaxCalculator {
 	public static double soc_health_security = 0; // 1,5% of basis
 	public static double soc_sick_security = 0; // 2,45% of basis
 	// health-related taxes
-	public static double taxDeductibleExpenses = 111.25; 
+	public static double taxDeductibleExpenses = 111.25;
 	public static double soc_health1 = 0; // of basis up to 9%
 	public static double soc_health2 = 0; // of basis up to  7,75 %
 	public static double advanceTaxPaidadvanceTax = 0; // advance tax 18%
 	public static double taxFreeIncome = 46.33; // tax-free income monthly 46,33 PLN
-	public static double advanceTaxPaidadvanceTax = 0;
+	//public static double advanceTaxPaidadvanceTax = 0;
 	public static double advanceTaxPaid0 = 0;
 
+	public static double advanceTax = 0;
+	public static double advanceTaxPaid = 0;
 
-public static void main(String[] args) {
+	public static void main(String[] args) {
 		try {
 			InputStreamReader isr = new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(isr);
@@ -56,12 +58,13 @@ public static void main(String[] args) {
 			System.out
 					.println("Income basis for health social security: "
 							+ income);
-			calculateOtherTaxes(income);
+			calculateOtherTaxes(income);//set health1 et 2
 			System.out.println("Health social security tax: 9% = "
 					+ df00.format(soc_health1) + " 7,75% = " + df00.format(soc_health2));
+
 			System.out.println("Tax deductible expenses "
 					+ taxDeductibleExpenses
-	 );
+			);
 			double taxedIncome = income - taxDeductibleExpenses ;
 			double taxedIncome0 = Double
 					.parseDouble(df.format(taxedIncome));
@@ -79,13 +82,18 @@ public static void main(String[] args) {
 			System.out.println("Advance tax paid = "
 					+ df00.format(advanceTaxPaid) + " rounded = "
 					+ df.format(advanceTaxPaid0));
+			double secHealthTaxes = soc_security + soc_health_security + soc_sick_security + soc_health1 + advanceTaxPaid0;
+			System.out.println(secHealthTaxes);
 			double netIncome = income
 					- ((soc_security + soc_health_security + soc_sick_security) + soc_health1 + advanceTaxPaid0);
 			System.out.println();
 			System.out
 					.println("Net income = "
 							+ df00.format(netIncome));
-		} else if (contractType == 'C') {
+
+
+
+		} /*else if (contractType == 'C') {
 			System.out.println("income " + income);
 			double income = calculateIncome(income);
 			System.out.println("Social security tax = "
@@ -104,7 +112,7 @@ public static void main(String[] args) {
 			taxDeductibleExpenses  = (income * 20) / 100;
 			System.out.println("Tax deductible expenses = "
 					+ taxDeductibleExpenses
-	 );
+			);
 			double taxedIncome = income - taxDeductibleExpenses ;
 			double taxedIncome0 = Double.parseDouble(df.format(taxedIncome));
 			System.out.println("income to be taxed = " + taxedIncome
@@ -126,11 +134,12 @@ public static void main(String[] args) {
 			System.out
 					.println("Net income = "
 							+ df00.format(netIncome));
-		} else {
+		}*/ else {
 			System.out.println("Unknown type of contract!");
 		}
 	}
 
+	// TODO: What's the prupose of this ??
 	public static void calculateAdvanceTax() {
 		advanceTaxPaidadvanceTax = advanceTax - soc_health2 - taxFreeIncome;
 	}
@@ -142,7 +151,7 @@ public static void main(String[] args) {
 	public static double calculateIncome(double income) {
 		soc_security = (income * 9.76) / 100;
 		soc_health_security = (income * 1.5) / 100;
-		soc_sick_secur = (income * 2.45) / 100;
+		double soc_sick_secur = (income * 2.45) / 100;
 		return (income - soc_security - soc_health_security - soc_sick_secur);
 	}
 
