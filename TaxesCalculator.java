@@ -88,7 +88,15 @@ public class TaxesCalculator {
         System.out.println("Net income of taxes : " + netIncomeOfTaxes);
     }
 
-
+    private void calculateAllTaxes() {
+        this.showSecurityHealthDetails();
+        calculateSecurityHealthDetails();
+        calculateTaxableIncome();
+        calculateAdvanceTax();
+        calculateReducedTax();
+        calculateNetIncome();
+        calculateNetIncomeOfTaxes();
+    }
 
     public static void main(String[] args) {
         System.out.println("Taxes Calculator");
@@ -111,13 +119,7 @@ public class TaxesCalculator {
         }
 
         TaxesCalculator p1 = new TaxesCalculator(income, contractType);
-        p1.showSecurityHealthDetails();
-        p1.calculateSecurityHealthDetails();
-        p1.calculateTaxableIncome();
-        p1.calculateAdvanceTax();
-        p1.calculateReducedTax();
-        p1.calculateNetIncome();
-        p1.calculateNetIncomeOfTaxes();
+        p1.calculateAllTaxes();
     }
 
 }
