@@ -11,9 +11,7 @@ public class TaxesCalculator {
     private final double SOCIAL_HEALTH_1 = 9.00;
     private final double SOCIAL_HEALTH_2 = 7.75;
 
-    //TODO: Why is set to 0 in the original code ?
-    //private final double SOC_SICKNESS_SECURITY = 2.45;
-    private final double SOC_SICKNESS_SECURITY = 0;
+    private final double SOC_SICKNESS_SECURITY = 2.45;
 
 
     private final double ADVANCE_TAX = 18.00;
@@ -35,8 +33,19 @@ public class TaxesCalculator {
     TaxesCalculator(double income, char contractType){
         this.income = income;
         this.contractType = contractType;
-        taxDeductibleExpenses = 111.25;
-        taxFreeIncome = 46.33;
+        switch (contractType) {
+            case 'E':
+                taxDeductibleExpenses = 111.25;
+                taxFreeIncome = 46.33;
+                break;
+            case 'C':
+                taxDeductibleExpenses = income*0.2;
+                taxFreeIncome = 0;
+                break;
+            default:
+                System.out.println("Unknown type of contract!");
+                System.exit(0);
+        }
     }
 
     private void showSecurityHealthDetails() {
@@ -82,8 +91,26 @@ public class TaxesCalculator {
 
 
     public static void main(String[] args) {
-        System.out.println("Hello World");
-        TaxesCalculator p1 = new TaxesCalculator(1000, 'E');
+        System.out.println("Taxes Calculator");
+
+        double income;
+        char contractType;
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Enter income: ");
+            income = Double.parseDouble(br.readLine());
+
+            System.out.print("Contract Type: (E)mployment, (C)ivil: ");
+            contractType = br.readLine().charAt(0);
+
+        } catch (Exception ex) {
+            System.out.println("Incorrect");
+            System.err.println(ex);
+            return;
+        }
+
+        TaxesCalculator p1 = new TaxesCalculator(income, contractType);
         p1.showSecurityHealthDetails();
         p1.calculateSecurityHealthDetails();
         p1.calculateTaxableIncome();
