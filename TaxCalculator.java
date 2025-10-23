@@ -179,30 +179,16 @@ public class TaxCalculator {
 		}
 	}
 
-	// TODO: What's the prupose of this, seems like it's never used
-	/*public static void calculateAdvanceTax() {
-		advanceTaxPaidadvanceTax = advanceTax - soc_health2 - taxFreeIncome;
-	}*/
 
 	public void calculateAdvanceTax() {
 		advanceTax = (income * ADVANCE_TAX_RATE) / 100;
 	}
-
-
-//	public static double calculateIncome(double income) {
-//		soc_security = (income * SOC_SECURITY_RATE) / 100;
-//		soc_health_security = (income * SOC_HEALTH_SECURITY_RATE) / 100;
-//		soc_sick_security = (income * SOC_SICK_SECURITY_RATE) / 100;
-//		return (income - soc_security - soc_health_security - soc_sick_security);
-//	}
 
 	public void calculateOtherHealthTaxes() {
 		soc_health1 = (income * SOC_HEALTH1_RATE) / 100;
 		soc_health2 = (income * SOC_HEALTH2_RATE) / 100;
 	}
 
-
-	// From here the new functions can be added
 	private void calculateSecurityHealthTaxes() {
 		soc_security = (income * SOC_SECURITY_RATE) / 100;
 		soc_health_security = (income * SOC_HEALTH_SECURITY_RATE) / 100;
