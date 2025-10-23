@@ -6,28 +6,70 @@ import java.text.DecimalFormat;
 
 public class TaxCalculator {
 
-	public static double income = 0;
-	public static char contractType = ' ';
+	private double income;
+	private char contractType;
+
+	//Basis values
+	public static final double SOC_SECURITY_RATE = 9.76;
+	public static final double SOC_HEALTH_SECURITY_RATE = 1.5;
+	public static final double SOC_SICK_SECURITY_RATE = 2.45;
+	public static final double SOC_HEALTH1_RATE = 9.0;
+	public static final double SOC_HEALTH2_RATE = 7.75;
+	public static final double ADVANCE_TAX_RATE = 18.0;
 
 	// social security taxes
-	public static double soc_security = 0; // 9,76% of basis
-	public static double soc_health_security = 0; // 1,5% of basis
-	public static double soc_sick_security = 0; // 2,45% of basis
+	public double soc_security; // 9,76% of basis
+	public double soc_health_security; // 1,5% of basis
+	public double soc_sick_security; // 2,45% of basis
 
 	// health-related taxes
-	public static double taxDeductibleExpenses = 111.25;
-	public static double soc_health1 = 0; // of basis up to 9%
-	public static double soc_health2 = 0; // of basis up to  7,75 %
+	public double taxDeductibleExpenses = 111.25;
+
+
+	public double soc_health1 = 0; // of basis up to 9%
+	public double soc_health2 = 0; // of basis up to  7,75 %
+
+	// a quoi sert ce truc ?
 	public static double advanceTaxPaidadvanceTax = 0; // advance tax 18%
-	public static double taxFreeIncome = 46.33; // tax-free income monthly 46,33 PLN
-	//public static double advanceTaxPaidadvanceTax = 0;
+
+	public double taxFreeIncome; // tax-free income monthly 46,33 PLN
+
+
 	public static double advanceTaxPaid0 = 0;
 
-	public static double advanceTax = 0;
 	public static double advanceTaxPaid = 0;
 	public static double taxPaid = 0;
 
+
+
+	// New values
+	private double incomeMinusSocialSecurity;
+	private double taxableIncome;
+	private double advanceTax;
+	private double totalTaxes;
+	private double netIncome;
+
+
+	// Functions
+
+	public TaxCalculator(double income, char contractType) {
+		this.income = income;
+		this.contractType = contractType;
+		if (contractType == 'E') {
+			taxDeductibleExpenses = 111.25;
+			taxFreeIncome = 46.33;
+		} else if (contractType == 'C') {
+			taxDeductibleExpenses = (income * 20) / 100;
+			taxFreeIncome = 0;
+		} else {
+			System.out.println("Unknown type of contract!");
+			System.exit(0);
+		}
+	}
+
 	public static void main(String[] args) {
+		double income;
+		char contractType;
 		try {
 			InputStreamReader isr = new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(isr);
@@ -44,55 +86,52 @@ public class TaxCalculator {
 			return;
 		}
 
+		TaxCalculator person1 = new TaxCalculator(income, contractType);
+
 		DecimalFormat df00 = new DecimalFormat("#.00");
 		DecimalFormat df = new DecimalFormat("#");
 
-		if (contractType == 'E') {
+		if (person1.contractType == 'E') {
 			System.out.println("EMPLOYMENT");
-			System.out.println("Income " + income);
-			double incomeMinusSocialSecurity = calculateIncome(income);
+			System.out.println("Income " + person1.income);
 
-			System.out.println("Social security tax "+ df00.format(soc_security));
-			System.out.println("Health social security "+ df00.format(soc_health_security));
-			System.out.println("Sickness social security tax "+ df00.format(soc_sick_security));
-			System.out.println("Income basis for health social security: "+ income);
+			person1.calculateSecurityHealthTaxes();
 
-			System.out.println("Income after social security " + df00.format(incomeMinusSocialSecurity));
+			System.out.println("Social security tax "+ df00.format(person1.soc_security));
+			System.out.println("Health social security "+ df00.format(person1.soc_health_security));
+			System.out.println("Sickness social security tax "+ df00.format(person1.soc_sick_security));
+			System.out.println("Income basis for health social security: "+ person1.income);
 
+			System.out.println("Income after social security " + df00.format(person1.incomeMinusSocialSecurity));
 
 			// Set Social Health Taxes 1 and 2
-			calculateOtherTaxes(income);
+			person1.calculateOtherHealthTaxes();
 
 			//Show Social Health Taxes 1 and 2
-			System.out.println("Health social security tax: 9% = "+ df00.format(soc_health1) + " 7,75% = " + df00.format(soc_health2));
+			System.out.println("Health social security tax: 9% = "+ df00.format(person1.soc_health1) + " 7,75% = " +
+					df00.format(person1.soc_health2));
 
-			System.out.println("Tax deductible expenses "+ taxDeductibleExpenses);
+			System.out.println("Tax deductible expenses "+ person1.taxDeductibleExpenses);
 
-			double taxableIncome = income - taxDeductibleExpenses ;
-			System.out.println("Taxable income " + taxableIncome+ " rounded " + df.format(taxableIncome));
+			person1.calculateTaxableIncome();
+			System.out.println("Taxable income " + person1.taxableIncome+ " rounded " + df.format(person1.taxableIncome));
 
 			//Calculate advanceTax based on taxable income
-			advanceTax = calculateAdvanceTax(taxableIncome);
+			person1.calculateTaxableIncome();
+			person1.calculateAdvanceTax();
 
-			System.out.println("Advance tax 18 % = "+ advanceTax);
-			System.out.println("Tax free income = " + taxFreeIncome);
-
-			//WHat's the purpose of taxPaid here ?
-			// not use anymore afterwards
-			double taxPaid = advanceTax - taxFreeIncome;
-			System.out.println("Reduced tax = "+ df00.format(taxPaid));
-			calculateAdvanceTax();
-
-			System.out.println("Advance tax to pay = "+ df00.format(advanceTaxPaid) + " rounded = "+ df.format(advanceTaxPaid));
-
-			double totalTaxes = soc_security + soc_health_security + soc_sick_security + soc_health1 + advanceTaxPaid;
-			System.out.println("Total taxes to be paid : "+totalTaxes);
-
-			double netIncome = income - totalTaxes;
-			System.out.println("Net income : "+ df00.format(netIncome));
+			System.out.println("Advance tax 18 % = "+ person1.advanceTax);
+			System.out.println("Tax free income = " + person1.taxFreeIncome);
 
 
+			person1.calculateTotalTaxes();
+			System.out.println("Total taxes to be paid : "+person1.totalTaxes);
 
+			person1.calculateNetIncome();
+			System.out.println("Net income : "+ df00.format(person1.netIncome));
+
+
+/*
 		} else if (contractType == 'C') {
 			System.out.println("CIVIL");
 			System.out.println("Income " + income);
@@ -106,7 +145,7 @@ public class TaxCalculator {
 			System.out.println("Income after social security " + df00.format(incomeMinusSocialSecurity));
 
 			// Set Social Health Taxes 1 and 2
-			calculateOtherTaxes(income);
+			calculateOtherHealthTaxes(income);
 
 			System.out.println("Health security tax: 9% = "+ df00.format(soc_health1) + " 7,75% = " + df00.format(soc_health2));
 			taxFreeIncome = 0;
@@ -134,31 +173,53 @@ public class TaxCalculator {
 			System.out.println();
 			System.out
 					.println("Net income = "
-							+ df00.format(netIncome));
+							+ df00.format(netIncome));*/
 		} else {
 			System.out.println("Unknown type of contract!");
 		}
 	}
 
 	// TODO: What's the prupose of this, seems like it's never used
-	public static void calculateAdvanceTax() {
+	/*public static void calculateAdvanceTax() {
 		advanceTaxPaidadvanceTax = advanceTax - soc_health2 - taxFreeIncome;
+	}*/
+
+	public void calculateAdvanceTax() {
+		advanceTax = (income * ADVANCE_TAX_RATE) / 100;
 	}
 
-	public static double calculateAdvanceTax(double income) {
-		advanceTax = (income * 18) / 100;
-		return advanceTax;
+
+//	public static double calculateIncome(double income) {
+//		soc_security = (income * SOC_SECURITY_RATE) / 100;
+//		soc_health_security = (income * SOC_HEALTH_SECURITY_RATE) / 100;
+//		soc_sick_security = (income * SOC_SICK_SECURITY_RATE) / 100;
+//		return (income - soc_security - soc_health_security - soc_sick_security);
+//	}
+
+	public void calculateOtherHealthTaxes() {
+		soc_health1 = (income * SOC_HEALTH1_RATE) / 100;
+		soc_health2 = (income * SOC_HEALTH2_RATE) / 100;
 	}
 
-	public static double calculateIncome(double income) {
-		soc_security = (income * 9.76) / 100;
-		soc_health_security = (income * 1.5) / 100;
-		soc_sick_security = (income * 2.45) / 100;
-		return (income - soc_security - soc_health_security - soc_sick_security);
+
+	// From here the new functions can be added
+	private void calculateSecurityHealthTaxes() {
+		soc_security = (income * SOC_SECURITY_RATE) / 100;
+		soc_health_security = (income * SOC_HEALTH_SECURITY_RATE) / 100;
+		soc_sick_security = (income * SOC_SICK_SECURITY_RATE) / 100;
+
+		incomeMinusSocialSecurity = income - soc_security - soc_health_security - soc_sick_security;
 	}
 
-	public static void calculateOtherTaxes(double income) {
-		soc_health1 = (income * 9) / 100;
-		soc_health2 = (income * 7.75) / 100;
+	private void calculateTaxableIncome() {
+		taxableIncome = income-taxDeductibleExpenses;
+	}
+
+	private void calculateTotalTaxes() {
+		totalTaxes = soc_security + soc_health_security + soc_sick_security + soc_health1 + advanceTaxPaid;;
+	}
+
+	private void calculateNetIncome() {
+		netIncome = income - totalTaxes;
 	}
 }
