@@ -29,8 +29,6 @@ public abstract class Contract {
         this.grossIncome = grossIncome;
     }
 
-    Contract(){}
-
     protected void calculateSecurityHealthTaxes() {
         socialPensionAmount = (grossIncome * SOC_PENSION_RATE) / 100;
         socialSecurityAmount = (grossIncome * SOC_SECURITY_RATE) / 100;
