@@ -6,10 +6,6 @@ import java.text.DecimalFormat;
 
 public class TaxCalculator {
 
-	protected double grossIncome;
-	protected char contractType;
-	protected double baseIncomeForTax;
-
 	//Basis values
 	public static final double SOC_PENSION_RATE = 9.76;
 	public static final double SOC_SECURITY_RATE = 1.5;
@@ -18,49 +14,20 @@ public class TaxCalculator {
 	public static final double SOC_HEALTH_DEDUCTIBLE_RATE = 7.75;
 	public static final double ADVANCE_TAX_RATE = 18.0;
 
-	// social security taxes
-	public double socialPensionAmount; // 9,76% of basis
-	public double socialSecurityAmount; // 1,5% of basis
-	public double socialSicknessAmount; // 2,45% of basis
-
-	// health-related taxes
-	public double taxDeductibleExpenses = 111.25;
-
-
-	public double socialHealthAmount = 0; // of basis up to 9%
-	public double deductibleSocialHealthAmount = 0; // of basis up to  7,75 %
-
-	// a quoi sert ce truc ?
-	public static double advanceTaxPaidadvanceTax = 0; // advance tax 18%
-
-	public double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
-
-
-	public static double advanceTaxPaid0 = 0;
-
-	protected double reducedAdvanceTax;
-
-	// New values
-	protected double incomeMinusSocialSecurity;
-	protected double taxableIncome;
-	protected double advanceTax;
-	protected double totalTaxes;
-	protected double netIncome;
-
 
 	// Functions
 
-	TaxCalculator(double grossIncome, char contractType) {
-		this.grossIncome = grossIncome;
-		this.contractType = contractType;
-		if (contractType == 'E') {
-			taxFreeIncome = 46.33;
-		} else if (contractType == 'C') {
-			taxFreeIncome = 0;
-		} else {
-			System.out.println("Unknown type of contract!");
-			System.exit(0);
-		}
+	TaxCalculator(Contract contract) {
+//		this.grossIncome = contract.grossIncome();
+//		this.contractType = contract.contractType();
+//		if (contract.contractType() == 'E') {
+//			taxFreeIncome = 46.33;
+//		} else if (contract.contractType() == 'C') {
+//			taxFreeIncome = 0;
+//		} else {
+//			System.out.println("Unknown type of contract!");
+//			System.exit(0);
+//		}
 	}
 
 	public static void main(String[] args) {
@@ -82,8 +49,8 @@ public class TaxCalculator {
 			return;
 		}
 
-		TaxCalculator person1;
-		person1 = new TaxCalculator(income, contractType);
+		Contract person1;
+		person1 = new Contract(income, contractType);
 
 		DecimalFormat df00 = new DecimalFormat("#.00");
 		DecimalFormat df = new DecimalFormat("#");
@@ -175,53 +142,5 @@ public class TaxCalculator {
 		}
 	}
 
-	protected void calculateSecurityHealthTaxes() {
-		socialPensionAmount = (grossIncome * SOC_PENSION_RATE) / 100;
-		socialSecurityAmount = (grossIncome * SOC_SECURITY_RATE) / 100;
-		socialSicknessAmount = (grossIncome * SOC_SICKNESS_RATE) / 100;
 
-		incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialSecurityAmount - socialSicknessAmount;
-	}
-
-	protected void setBaseIncomeForTax() {
-		if (this.contractType == 'E') {
-			baseIncomeForTax = grossIncome;
-		} else if (this.contractType == 'C') {
-			baseIncomeForTax = incomeMinusSocialSecurity;
-		}
-	}
-
-	public void calculateInsuranceHealthTaxes() {
-		socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;
-		deductibleSocialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_DEDUCTIBLE_RATE) / 100;
-	}
-
-	protected void setTaxDeductiblExpensese() {
-		if (this.contractType == 'E') {
-			taxDeductibleExpenses = 111.25;
-		} else if (this.contractType == 'C') {
-			taxDeductibleExpenses = (baseIncomeForTax * 20) / 100;
-		}
-	}
-
-	protected void calculateTaxableIncome() {
-		taxableIncome = baseIncomeForTax-taxDeductibleExpenses;
-	}
-
-	public void calculateAdvanceTax() {
-		advanceTax = (taxableIncome * ADVANCE_TAX_RATE) / 100;
-	}
-
-	protected void calculateReducedAdvanceTax() {
-		reducedAdvanceTax = advanceTax - taxFreeIncome - deductibleSocialHealthAmount;
-	}
-
-	protected void calculateTotalTaxes() {
-		totalTaxes = socialPensionAmount + socialSecurityAmount + socialSicknessAmount + socialHealthAmount + reducedAdvanceTax;
-	}
-
-	//TODO: sert a qq chose ?
-	protected void calculateNetIncome() {
-		netIncome = grossIncome - totalTaxes;
-	}
 }
