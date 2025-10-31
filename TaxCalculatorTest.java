@@ -29,7 +29,7 @@ class TaxCalculatorTest {
         runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
-        assertEquals(15.00, tc.socialHealthAmount, DELTA);
+        assertEquals(15.00, tc.socialSecurityAmount, DELTA);
         assertEquals(24.50, tc.socialSicknessAmount, DELTA);
 
         // income minus social security
@@ -37,8 +37,8 @@ class TaxCalculatorTest {
         assertEquals(baseHealth, tc.incomeMinusSocialSecurity, DELTA);
 
         // health insurance
-        assertEquals(77.661, tc.soc_health1, DELTA);
-        assertEquals(66.8747499, tc.soc_health2, DELTA);
+        assertEquals(77.661, tc.socialHealthAmount, DELTA);
+        assertEquals(66.8747499, tc.deductibleSocialHealthAmount, DELTA);
 
         // taxable base and tax
         assertEquals(1000.00 - 111.25, tc.taxableIncome, DELTA);
@@ -57,14 +57,14 @@ class TaxCalculatorTest {
         runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
-        assertEquals(15.00, tc.socialHealthAmount, DELTA);
+        assertEquals(15.00, tc.socialSecurityAmount, DELTA);
         assertEquals(24.50, tc.socialSicknessAmount, DELTA);
 
         double baseHealth = 1000.00 - (97.60 + 15.00 + 24.50);
         assertEquals(baseHealth, tc.incomeMinusSocialSecurity, DELTA);
 
-        assertEquals(77.661, tc.soc_health1, DELTA);
-        assertEquals(66.8747499, tc.soc_health2, DELTA);
+        assertEquals(77.661, tc.socialHealthAmount, DELTA);
+        assertEquals(66.8747499, tc.deductibleSocialHealthAmount, DELTA);
 
         // tax-deductible expenses = 20% of baseHealth
         assertEquals(690.31999999999, tc.taxableIncome, DELTA);
@@ -88,15 +88,15 @@ class TaxCalculatorTest {
 
         // social contributions
         assertEquals(25068.1696, tc.socialPensionAmount, DELTA);
-        assertEquals(3852.69,     tc.socialHealthAmount, DELTA);
+        assertEquals(3852.69,     tc.socialSecurityAmount, DELTA);
         assertEquals(6292.727000000001, tc.socialSicknessAmount, DELTA);
 
         // health base
         assertEquals(221632.4134, tc.incomeMinusSocialSecurity, DELTA);
 
         // health insurance
-        assertEquals(19946.917206,  tc.soc_health1, DELTA);      // 9%
-        assertEquals(17176.5120385, tc.soc_health2, DELTA);      // 7.75%
+        assertEquals(19946.917206,  tc.socialHealthAmount, DELTA);      // 9%
+        assertEquals(17176.5120385, tc.deductibleSocialHealthAmount, DELTA);      // 7.75%
 
         // taxable base and PIT
         assertEquals(256734.75, tc.taxableIncome, DELTA);

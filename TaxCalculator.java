@@ -11,24 +11,24 @@ public class TaxCalculator {
 	protected double baseIncomeForTax;
 
 	//Basis values
-	public static final double SOC_SECURITY_RATE = 9.76;
-	public static final double SOC_HEALTH_SECURITY_RATE = 1.5;
-	public static final double SOC_SICK_SECURITY_RATE = 2.45;
-	public static final double SOC_HEALTH1_RATE = 9.0;
-	public static final double SOC_HEALTH2_RATE = 7.75;
+	public static final double SOC_PENSION_RATE = 9.76;
+	public static final double SOC_SECURITY_RATE = 1.5;
+	public static final double SOC_SICKNESS_RATE = 2.45;
+	public static final double SOC_HEALTH_RATE = 9.0;
+	public static final double SOC_HEALTH_DEDUCTIBLE_RATE = 7.75;
 	public static final double ADVANCE_TAX_RATE = 18.0;
 
 	// social security taxes
 	public double socialPensionAmount; // 9,76% of basis
-	public double socialHealthAmount; // 1,5% of basis
+	public double socialSecurityAmount; // 1,5% of basis
 	public double socialSicknessAmount; // 2,45% of basis
 
 	// health-related taxes
 	public double taxDeductibleExpenses = 111.25;
 
 
-	public double soc_health1 = 0; // of basis up to 9%
-	public double soc_health2 = 0; // of basis up to  7,75 %
+	public double socialHealthAmount = 0; // of basis up to 9%
+	public double deductibleSocialHealthAmount = 0; // of basis up to  7,75 %
 
 	// a quoi sert ce truc ?
 	public static double advanceTaxPaidadvanceTax = 0; // advance tax 18%
@@ -95,15 +95,15 @@ public class TaxCalculator {
 			person1.calculateSecurityHealthTaxes();
 
 			System.out.println("Social security tax "+ person1.socialPensionAmount);
-			System.out.println("Health social security "+ person1.socialHealthAmount);
+			System.out.println("Health social security "+ person1.socialSecurityAmount);
 			System.out.println("Sickness social security tax "+ person1.socialSicknessAmount);
 
 			System.out.println("Income basis for health insurance social security: "+ person1.incomeMinusSocialSecurity);
 
 			// Set Social Health Taxes 1 and 2
 			person1.calculateInsuranceHealthTaxes();
-			System.out.println("Health insurance social security tax: 9% = "+ person1.soc_health1 + " 7,75% = " +
-					person1.soc_health2);
+			System.out.println("Health insurance social security tax: 9% = "+ person1.socialHealthAmount + " 7,75% = " +
+					person1.deductibleSocialHealthAmount);
 
 			//Set base income for tax (ie income on which is applied taxes)
 			person1.setBaseIncomeForTax();
@@ -136,15 +136,15 @@ public class TaxCalculator {
 
 			person1.calculateSecurityHealthTaxes();
 			System.out.println("Social security tax "+ df00.format(person1.socialPensionAmount));
-			System.out.println("Health social security "+ df00.format(person1.socialHealthAmount));
+			System.out.println("Health social security "+ df00.format(person1.socialSecurityAmount));
 			System.out.println("Sickness social security tax "+ df00.format(person1.socialSicknessAmount));
 			System.out.println("Income after social security " + df00.format(person1.incomeMinusSocialSecurity));
 
 
 			// Set Social Health Taxes 1 and 2
 			person1.calculateInsuranceHealthTaxes();
-			System.out.println("Health insurance social security tax: 9% = "+ df00.format(person1.soc_health1) + " 7,75% = " +
-					df00.format(person1.soc_health2));
+			System.out.println("Health insurance social security tax: 9% = "+ df00.format(person1.socialHealthAmount) + " 7,75% = " +
+					df00.format(person1.deductibleSocialHealthAmount));
 
 			//Set base income for tax (ie income on which is applied taxes)
 			person1.setBaseIncomeForTax();
@@ -176,11 +176,11 @@ public class TaxCalculator {
 	}
 
 	protected void calculateSecurityHealthTaxes() {
-		socialPensionAmount = (grossIncome * SOC_SECURITY_RATE) / 100;
-		socialHealthAmount = (grossIncome * SOC_HEALTH_SECURITY_RATE) / 100;
-		socialSicknessAmount = (grossIncome * SOC_SICK_SECURITY_RATE) / 100;
+		socialPensionAmount = (grossIncome * SOC_PENSION_RATE) / 100;
+		socialSecurityAmount = (grossIncome * SOC_SECURITY_RATE) / 100;
+		socialSicknessAmount = (grossIncome * SOC_SICKNESS_RATE) / 100;
 
-		incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialHealthAmount - socialSicknessAmount;
+		incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialSecurityAmount - socialSicknessAmount;
 	}
 
 	protected void setBaseIncomeForTax() {
@@ -192,8 +192,8 @@ public class TaxCalculator {
 	}
 
 	public void calculateInsuranceHealthTaxes() {
-		soc_health1 = (incomeMinusSocialSecurity * SOC_HEALTH1_RATE) / 100;
-		soc_health2 = (incomeMinusSocialSecurity * SOC_HEALTH2_RATE) / 100;
+		socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;
+		deductibleSocialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_DEDUCTIBLE_RATE) / 100;
 	}
 
 	protected void setTaxDeductiblExpensese() {
@@ -213,11 +213,11 @@ public class TaxCalculator {
 	}
 
 	protected void calculateReducedAdvanceTax() {
-		reducedAdvanceTax = advanceTax - taxFreeIncome - soc_health2;
+		reducedAdvanceTax = advanceTax - taxFreeIncome - deductibleSocialHealthAmount;
 	}
 
 	protected void calculateTotalTaxes() {
-		totalTaxes = socialPensionAmount + socialHealthAmount + socialSicknessAmount + soc_health1 + reducedAdvanceTax;
+		totalTaxes = socialPensionAmount + socialSecurityAmount + socialSicknessAmount + socialHealthAmount + reducedAdvanceTax;
 	}
 
 	//TODO: sert a qq chose ?
