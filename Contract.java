@@ -2,7 +2,7 @@ package com.bartoszwalter.students.taxes;
 
 import static com.bartoszwalter.students.taxes.TaxCalculator.*;
 
-public class Contract {
+public abstract class Contract {
 
     protected double grossIncome;
     protected char contractType;
@@ -26,9 +26,8 @@ public class Contract {
     protected double totalTaxes;
     protected double netIncome;
 
-    Contract(double grossIncome, char contractType){
+    Contract(double grossIncome){
         this.grossIncome = grossIncome;
-        this.contractType = contractType;
     }
 
     Contract(){}
@@ -41,9 +40,9 @@ public class Contract {
         incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialSecurityAmount - socialSicknessAmount;
     }
 
-    protected void setBaseIncomeForTax() {}
+    protected abstract void setBaseIncomeForTax();
 
-    protected void setTaxDeductibleExpenses() {}
+    protected abstract void setTaxDeductibleExpenses();
 
     public void calculateInsuranceHealthTaxes() {
         socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;

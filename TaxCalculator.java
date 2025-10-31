@@ -33,8 +33,7 @@ public class TaxCalculator {
 			return;
 		}
 
-		Contract person1;
-		person1 = new Contract(income, contractType);
+		Contract person1 = null;
 
 		DecimalFormat df00 = new DecimalFormat("#.00");
 		DecimalFormat df = new DecimalFormat("#");
