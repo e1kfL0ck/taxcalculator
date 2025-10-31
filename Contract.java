@@ -6,6 +6,8 @@ public class Contract {
 
     protected double grossIncome;
     protected char contractType;
+    public double taxDeductibleExpenses;
+    public double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
 
     // social security taxes
     public double socialPensionAmount; // 9,76% of basis
@@ -14,9 +16,6 @@ public class Contract {
 
     public double socialHealthAmount; // of basis up to 9%
     public double deductibleSocialHealthAmount; // of basis up to  7,75 %
-
-    public double taxDeductibleExpenses;
-    public double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
 
     // New values
     protected double incomeMinusSocialSecurity;
@@ -27,11 +26,12 @@ public class Contract {
     protected double totalTaxes;
     protected double netIncome;
 
-
     Contract(double grossIncome, char contractType){
         this.grossIncome = grossIncome;
         this.contractType = contractType;
     }
+
+    Contract(){}
 
     protected void calculateSecurityHealthTaxes() {
         socialPensionAmount = (grossIncome * SOC_PENSION_RATE) / 100;
@@ -41,10 +41,9 @@ public class Contract {
         incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialSecurityAmount - socialSicknessAmount;
     }
 
+
     protected void setBaseIncomeForTax() {
-        if (this.contractType == 'E') {
-            baseIncomeForTax = grossIncome;
-        } else if (this.contractType == 'C') {
+        if (this.contractType == 'C') {
             baseIncomeForTax = incomeMinusSocialSecurity;
         }
     }

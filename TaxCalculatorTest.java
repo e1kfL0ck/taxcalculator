@@ -10,7 +10,7 @@ class TaxCalculatorTest {
     private static final double DELTA = 1e-6;
     private static final double roundDELTA = 1e-3;
 
-    private static void runFullPipeline(Contract tc) {
+    private static void runFullPipeline2(Contract tc) {
         tc.calculateSecurityHealthTaxes();
         tc.calculateInsuranceHealthTaxes();
         tc.setBaseIncomeForTax();
@@ -22,10 +22,22 @@ class TaxCalculatorTest {
         tc.calculateNetIncome();
     }
 
+    private static void runFullPipeline(Contract tc) {
+        tc.calculateSecurityHealthTaxes();
+        tc.calculateInsuranceHealthTaxes();
+        tc.setBaseIncomeForTax();
+        tc.calculateTaxableIncome();
+        tc.calculateAdvanceTax();
+        tc.calculateReducedAdvanceTax();
+        tc.calculateTotalTaxes();
+        tc.calculateNetIncome();
+    }
+
+
     @Test
     @DisplayName("Employment E: gross 1000 → expected components and net")
     void employmentExample() {
-        Contract tc = new Contract(1000.00, 'E');
+        Contract tc = new EmployementContract(1000.00, 'E');
         runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
@@ -54,7 +66,7 @@ class TaxCalculatorTest {
     @DisplayName("Civil C: gross 1000 → expected components and net")
     void civilExample() {
         Contract tc = new Contract(1000.00, 'C');
-        runFullPipeline(tc);
+        runFullPipeline2(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
         assertEquals(15.00, tc.socialSecurityAmount, DELTA);
@@ -83,7 +95,7 @@ class TaxCalculatorTest {
     @Test
     @DisplayName("Employment E: gross 256846 → matches program outputs")
     void employmentExample_2() {
-        Contract tc = new Contract(256846.00, 'E');
+        Contract tc = new EmployementContract(256846.00, 'E');
         runFullPipeline(tc);
 
         // social contributions
