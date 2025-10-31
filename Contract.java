@@ -78,4 +78,17 @@ public class Contract {
     protected void calculateNetIncome() {
         netIncome = grossIncome - totalTaxes;
     }
+    
+    protected void caculateTaxes() {
+        calculateSecurityHealthTaxes();
+        calculateInsuranceHealthTaxes();
+        setBaseIncomeForTax();
+        setTaxDeductibleExpenses();
+        calculateTaxableIncome();
+        calculateAdvanceTax();
+        calculateReducedAdvanceTax();
+        calculateTotalTaxes();
+        calculateNetIncome();
+    }
+
 }

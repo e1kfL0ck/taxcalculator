@@ -6,29 +6,13 @@ import java.text.DecimalFormat;
 
 public class TaxCalculator {
 
-	//Basis values
+	//TODO : dans quelle classe mettre ces valeurs ?
 	public static final double SOC_PENSION_RATE = 9.76;
 	public static final double SOC_SECURITY_RATE = 1.5;
 	public static final double SOC_SICKNESS_RATE = 2.45;
 	public static final double SOC_HEALTH_RATE = 9.0;
 	public static final double SOC_HEALTH_DEDUCTIBLE_RATE = 7.75;
 	public static final double ADVANCE_TAX_RATE = 18.0;
-
-
-	// Functions
-
-	TaxCalculator(Contract contract) {
-//		this.grossIncome = contract.grossIncome();
-//		this.contractType = contract.contractType();
-//		if (contract.contractType() == 'E') {
-//			taxFreeIncome = 46.33;
-//		} else if (contract.contractType() == 'C') {
-//			taxFreeIncome = 0;
-//		} else {
-//			System.out.println("Unknown type of contract!");
-//			System.exit(0);
-//		}
-	}
 
 	public static void main(String[] args) {
 		double income;
@@ -55,7 +39,21 @@ public class TaxCalculator {
 		DecimalFormat df00 = new DecimalFormat("#.00");
 		DecimalFormat df = new DecimalFormat("#");
 
-		if (person1.contractType == 'E') {
+		switch (contractType) {
+			case 'E':
+				person1 = new EmployementContract(income);
+				break;
+			case 'C':
+				person1 = new CivilContract(income);
+				break;
+			default:
+				System.out.println("Unknown type of contract!");
+				System.exit(1);
+		}
+
+		person1.caculateTaxes();
+
+		/*if (person1.contractType == 'E') {
 			System.out.println("EMPLOYMENT");
 			System.out.println("Income " + person1.grossIncome);
 
@@ -139,8 +137,7 @@ public class TaxCalculator {
 
 		} else {
 			System.out.println("Unknown type of contract!");
-		}
+		}*/
 	}
-
 
 }

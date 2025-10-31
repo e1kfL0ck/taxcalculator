@@ -2,9 +2,9 @@ package com.bartoszwalter.students.taxes;
 
 public class CivilContract extends Contract {
 
-    CivilContract(double grossIncome, char contractType){
+    CivilContract(double grossIncome){
         this.grossIncome = grossIncome;
-        this.contractType = contractType;
+        this.contractType = 'C';
         taxFreeIncome = 0;
     }
 

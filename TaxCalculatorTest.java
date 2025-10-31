@@ -38,7 +38,7 @@ class TaxCalculatorTest {
     @Test
     @DisplayName("Employment E: gross 1000 → expected components and net")
     void employmentExample() {
-        Contract tc = new EmployementContract(1000.00, 'E');
+        Contract tc = new EmployementContract(1000.00);
         runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
@@ -66,7 +66,7 @@ class TaxCalculatorTest {
     @Test
     @DisplayName("Civil C: gross 1000 → expected components and net")
     void civilExample() {
-        Contract tc = new CivilContract(1000.00, 'C');
+        Contract tc = new CivilContract(1000.00);
         runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
@@ -96,7 +96,7 @@ class TaxCalculatorTest {
     @Test
     @DisplayName("Employment E: gross 256846 → matches program outputs")
     void employmentExample_2() {
-        Contract tc = new EmployementContract(256846.00, 'E');
+        Contract tc = new EmployementContract(256846.00);
         runFullPipeline(tc);
 
         // social contributions

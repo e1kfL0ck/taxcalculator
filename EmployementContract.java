@@ -2,9 +2,9 @@ package com.bartoszwalter.students.taxes;
 
 public class EmployementContract extends Contract {
 
-    EmployementContract(double grossIncome, char contractType){
+    EmployementContract(double grossIncome){
         this.grossIncome = grossIncome;
-        this.contractType = contractType;
+        this.contractType = 'E';
         taxFreeIncome = 46.33;
     }
 
