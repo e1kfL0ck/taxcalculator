@@ -1,6 +1,6 @@
 package taxcalculator;
 
-import static com.bartoszwalter.students.taxes.TaxCalculator.*;
+import static taxcalculator.TaxCalculator.*;
 
 public abstract class Contract {
 
