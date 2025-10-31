@@ -5,7 +5,6 @@ import static com.bartoszwalter.students.taxes.TaxCalculator.*;
 public abstract class Contract {
 
     protected double grossIncome;
-    protected char contractType;
     public double taxDeductibleExpenses;
     public double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
 
@@ -47,15 +46,6 @@ public abstract class Contract {
     public void calculateInsuranceHealthTaxes() {
         socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;
         deductibleSocialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_DEDUCTIBLE_RATE) / 100;
-    }
-
-    protected void setTaxDeductiblExpensese() {
-        if (this.contractType == 'E') {
-            taxDeductibleExpenses = 111.25;
-            taxFreeIncome = 46.33;
-        } else if (this.contractType == 'C') {
-            taxDeductibleExpenses = (baseIncomeForTax * 20) / 100;
-        }
     }
 
     protected void calculateTaxableIncome() {

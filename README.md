@@ -18,10 +18,19 @@ TaxCalculator - a kata for a Clean Code exercise
 
 ### 28/10/2025
 
-- First tests to check the consitstency of the new program
+- First tests to validate the behavior of the rewrited code
 - The contract has been moved to it's own class for a cleaner code
+  - Contract.java
 
-### 31/10/2025
-- Two types contract have been created for the differences in calculation
-- The main contract class should not be used to create new object, therefore it's abstract
-- Some of the methods that need to be reimplemented by each type of contract are abstract as well
+### 31/10/2024
+- Two contract types have been created for the differences in calculation, resulting in 2 child classes:
+    - EmploymentContract.java
+    - CivilContract.java
+- The main contract class should not be used to create new objects; therefore, it's abstract
+- The methods that need to be reimplemented by each contract type are abstract as well:
+    - setBaseIncomeForTax()
+    - setTaxDeductibleExpenses()
+- A new class to display data has been created:
+    - TaxDisplay.java
+    - Because both child classes contain exactly the same variables, we don't need to differentiate what will be printed by this class; therefore, using a Contract object to be printed is consistent
+- The contract type variable has been removed from the child classes as it is not necessary anymore; the type can be retrieved using instanceof when needed

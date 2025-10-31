@@ -8,19 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TaxCalculatorTest {
 
     private static final double DELTA = 1e-6;
-    private static final double roundDELTA = 1e-3;
-
-    private static void runFullPipeline2(Contract tc) {
-        tc.calculateSecurityHealthTaxes();
-        tc.calculateInsuranceHealthTaxes();
-        tc.setBaseIncomeForTax();
-        tc.setTaxDeductiblExpensese();
-        tc.calculateTaxableIncome();
-        tc.calculateAdvanceTax();
-        tc.calculateReducedAdvanceTax();
-        tc.calculateTotalTaxes();
-        tc.calculateNetIncome();
-    }
 
     private static void runFullPipeline(Contract tc) {
         tc.calculateSecurityHealthTaxes();
