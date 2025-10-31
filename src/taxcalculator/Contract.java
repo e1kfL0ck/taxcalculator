@@ -5,16 +5,16 @@ import static taxcalculator.TaxCalculator.*;
 public abstract class Contract {
 
     protected double grossIncome;
-    public double taxDeductibleExpenses;
-    public double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
+    protected double taxDeductibleExpenses;
+    protected double taxFreeIncome; // tax-free income monthly 46,33, seems like it depend on the already paid tax...
 
     // social security taxes
-    public double socialPensionAmount; // 9,76% of basis
-    public double socialSecurityAmount; // 1,5% of basis
-    public double socialSicknessAmount; // 2,45% of basis
+    protected double socialPensionAmount; // 9,76% of basis
+    protected double socialSecurityAmount; // 1,5% of basis
+    protected double socialSicknessAmount; // 2,45% of basis
 
-    public double socialHealthAmount; // of basis up to 9%
-    public double deductibleSocialHealthAmount; // of basis up to  7,75 %
+    protected double socialHealthAmount; // of basis up to 9%
+    protected double deductibleSocialHealthAmount; // of basis up to  7,75 %
 
     // New values
     protected double incomeMinusSocialSecurity;
@@ -43,7 +43,7 @@ public abstract class Contract {
 
     protected abstract void setTaxDeductibleExpenses();
 
-    public void calculateInsuranceHealthTaxes() {
+    protected void calculateInsuranceHealthTaxes() {
         socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;
         deductibleSocialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_DEDUCTIBLE_RATE) / 100;
     }
@@ -52,7 +52,7 @@ public abstract class Contract {
         taxableIncome = baseIncomeForTax-taxDeductibleExpenses;
     }
 
-    public void calculateAdvanceTax() {
+    protected void calculateAdvanceTax() {
         advanceTax = (taxableIncome * ADVANCE_TAX_RATE) / 100;
     }
 
