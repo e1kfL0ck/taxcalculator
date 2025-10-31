@@ -19,5 +19,9 @@ TaxCalculator - a kata for a Clean Code exercise
 ### 28/10/2025
 
 - First tests to check the consitstency of the new program
+- The contract has been moved to it's own class for a cleaner code
 
-
+### 31/10/2025
+- Two types contract have been created for the differences in calculation
+- The main contract class should not be used to create new object, therefore it's abstract
+- Some of the methods that need to be reimplemented by each type of contract are abstract as well
