@@ -18,3 +18,6 @@ TaxCalculator - a kata for a Clean Code exercise
 
 ### 28/10/2025
 
+- First tests to check the consitstency of the new program
+
+

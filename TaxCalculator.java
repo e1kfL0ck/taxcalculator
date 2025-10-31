@@ -6,9 +6,9 @@ import java.text.DecimalFormat;
 
 public class TaxCalculator {
 
-	private double grossIncome;
-	private char contractType;
-	private double baseIncomeForTax;
+	protected double grossIncome;
+	protected char contractType;
+	protected double baseIncomeForTax;
 
 	//Basis values
 	public static final double SOC_SECURITY_RATE = 9.76;
@@ -19,9 +19,9 @@ public class TaxCalculator {
 	public static final double ADVANCE_TAX_RATE = 18.0;
 
 	// social security taxes
-	public double soc_security; // 9,76% of basis
-	public double soc_health_security; // 1,5% of basis
-	public double soc_sick_security; // 2,45% of basis
+	public double socialPensionAmount; // 9,76% of basis
+	public double socialHealthAmount; // 1,5% of basis
+	public double socialSicknessAmount; // 2,45% of basis
 
 	// health-related taxes
 	public double taxDeductibleExpenses = 111.25;
@@ -38,14 +38,14 @@ public class TaxCalculator {
 
 	public static double advanceTaxPaid0 = 0;
 
-	public static double reducedAdvanceTax = 0;
+	protected double reducedAdvanceTax;
 
 	// New values
-	private double incomeMinusSocialSecurity;
-	private double taxableIncome;
-	private double advanceTax;
-	private double totalTaxes;
-	private double netIncome;
+	protected double incomeMinusSocialSecurity;
+	protected double taxableIncome;
+	protected double advanceTax;
+	protected double totalTaxes;
+	protected double netIncome;
 
 
 	// Functions
@@ -94,16 +94,16 @@ public class TaxCalculator {
 
 			person1.calculateSecurityHealthTaxes();
 
-			System.out.println("Social security tax "+ df00.format(person1.soc_security));
-			System.out.println("Health social security "+ df00.format(person1.soc_health_security));
-			System.out.println("Sickness social security tax "+ df00.format(person1.soc_sick_security));
+			System.out.println("Social security tax "+ person1.socialPensionAmount);
+			System.out.println("Health social security "+ person1.socialHealthAmount);
+			System.out.println("Sickness social security tax "+ person1.socialSicknessAmount);
 
 			System.out.println("Income basis for health insurance social security: "+ person1.incomeMinusSocialSecurity);
 
 			// Set Social Health Taxes 1 and 2
 			person1.calculateInsuranceHealthTaxes();
-			System.out.println("Health insurance social security tax: 9% = "+ df00.format(person1.soc_health1) + " 7,75% = " +
-					df00.format(person1.soc_health2));
+			System.out.println("Health insurance social security tax: 9% = "+ person1.soc_health1 + " 7,75% = " +
+					person1.soc_health2);
 
 			//Set base income for tax (ie income on which is applied taxes)
 			person1.setBaseIncomeForTax();
@@ -127,17 +127,17 @@ public class TaxCalculator {
 			System.out.println("Total taxes to be paid : "+person1.totalTaxes);
 
 			person1.calculateNetIncome();
-			System.out.println("Net income : "+ df00.format(person1.netIncome));
+			System.out.println("Net income : "+ person1.netIncome);
 
 
 		} else if (contractType == 'C') {
-			System.out.println("EMPLOYMENT");
+			System.out.println("CIVIL");
 			System.out.println("Income " + person1.grossIncome);
 
 			person1.calculateSecurityHealthTaxes();
-			System.out.println("Social security tax "+ df00.format(person1.soc_security));
-			System.out.println("Health social security "+ df00.format(person1.soc_health_security));
-			System.out.println("Sickness social security tax "+ df00.format(person1.soc_sick_security));
+			System.out.println("Social security tax "+ df00.format(person1.socialPensionAmount));
+			System.out.println("Health social security "+ df00.format(person1.socialHealthAmount));
+			System.out.println("Sickness social security tax "+ df00.format(person1.socialSicknessAmount));
 			System.out.println("Income after social security " + df00.format(person1.incomeMinusSocialSecurity));
 
 
@@ -168,22 +168,22 @@ public class TaxCalculator {
 			System.out.println("Total taxes to be paid : "+person1.totalTaxes);
 
 			person1.calculateNetIncome();
-			System.out.println("Net income : "+ df00.format(person1.netIncome));
+			System.out.println("Net income : "+ person1.netIncome);
 
 		} else {
 			System.out.println("Unknown type of contract!");
 		}
 	}
 
-	private void calculateSecurityHealthTaxes() {
-		soc_security = (grossIncome * SOC_SECURITY_RATE) / 100;
-		soc_health_security = (grossIncome * SOC_HEALTH_SECURITY_RATE) / 100;
-		soc_sick_security = (grossIncome * SOC_SICK_SECURITY_RATE) / 100;
+	protected void calculateSecurityHealthTaxes() {
+		socialPensionAmount = (grossIncome * SOC_SECURITY_RATE) / 100;
+		socialHealthAmount = (grossIncome * SOC_HEALTH_SECURITY_RATE) / 100;
+		socialSicknessAmount = (grossIncome * SOC_SICK_SECURITY_RATE) / 100;
 
-		incomeMinusSocialSecurity = grossIncome - soc_security - soc_health_security - soc_sick_security;
+		incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialHealthAmount - socialSicknessAmount;
 	}
 
-	private void setBaseIncomeForTax() {
+	protected void setBaseIncomeForTax() {
 		if (this.contractType == 'E') {
 			baseIncomeForTax = grossIncome;
 		} else if (this.contractType == 'C') {
@@ -196,7 +196,7 @@ public class TaxCalculator {
 		soc_health2 = (incomeMinusSocialSecurity * SOC_HEALTH2_RATE) / 100;
 	}
 
-	private void setTaxDeductiblExpensese() {
+	protected void setTaxDeductiblExpensese() {
 		if (this.contractType == 'E') {
 			taxDeductibleExpenses = 111.25;
 		} else if (this.contractType == 'C') {
@@ -204,7 +204,7 @@ public class TaxCalculator {
 		}
 	}
 
-	private void calculateTaxableIncome() {
+	protected void calculateTaxableIncome() {
 		taxableIncome = baseIncomeForTax-taxDeductibleExpenses;
 	}
 
@@ -212,16 +212,16 @@ public class TaxCalculator {
 		advanceTax = (taxableIncome * ADVANCE_TAX_RATE) / 100;
 	}
 
-	private void calculateReducedAdvanceTax() {
+	protected void calculateReducedAdvanceTax() {
 		reducedAdvanceTax = advanceTax - taxFreeIncome - soc_health2;
 	}
 
-	private void calculateTotalTaxes() {
-		totalTaxes = soc_security + soc_health_security + soc_sick_security + soc_health1 + reducedAdvanceTax;
+	protected void calculateTotalTaxes() {
+		totalTaxes = socialPensionAmount + socialHealthAmount + socialSicknessAmount + soc_health1 + reducedAdvanceTax;
 	}
 
 	//TODO: sert a qq chose ?
-	private void calculateNetIncome() {
+	protected void calculateNetIncome() {
 		netIncome = grossIncome - totalTaxes;
 	}
 }
