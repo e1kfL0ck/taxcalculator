@@ -26,6 +26,7 @@ class TaxCalculatorTest {
         tc.calculateSecurityHealthTaxes();
         tc.calculateInsuranceHealthTaxes();
         tc.setBaseIncomeForTax();
+        tc.setTaxDeductibleExpenses();
         tc.calculateTaxableIncome();
         tc.calculateAdvanceTax();
         tc.calculateReducedAdvanceTax();
@@ -65,8 +66,8 @@ class TaxCalculatorTest {
     @Test
     @DisplayName("Civil C: gross 1000 → expected components and net")
     void civilExample() {
-        Contract tc = new Contract(1000.00, 'C');
-        runFullPipeline2(tc);
+        Contract tc = new CivilContract(1000.00, 'C');
+        runFullPipeline(tc);
 
         assertEquals(97.60, tc.socialPensionAmount, DELTA);
         assertEquals(15.00, tc.socialSecurityAmount, DELTA);

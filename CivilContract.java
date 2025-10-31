@@ -1,20 +1,20 @@
 package com.bartoszwalter.students.taxes;
 
-public class EmployementContract extends Contract {
+public class CivilContract extends Contract {
 
-    EmployementContract(double grossIncome, char contractType){
+    CivilContract(double grossIncome, char contractType){
         this.grossIncome = grossIncome;
         this.contractType = contractType;
-        taxFreeIncome = 46.33;
+        taxFreeIncome = 0;
     }
 
     @Override
     protected void setBaseIncomeForTax() {
-        baseIncomeForTax = grossIncome;
+        baseIncomeForTax = incomeMinusSocialSecurity;
     }
 
     @Override
     protected void setTaxDeductibleExpenses() {
-        taxDeductibleExpenses = 111.25;
+        taxDeductibleExpenses = (baseIncomeForTax * 20) / 100;
     }
 }

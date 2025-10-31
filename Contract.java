@@ -41,12 +41,9 @@ public class Contract {
         incomeMinusSocialSecurity = grossIncome - socialPensionAmount - socialSecurityAmount - socialSicknessAmount;
     }
 
+    protected void setBaseIncomeForTax() {}
 
-    protected void setBaseIncomeForTax() {
-        if (this.contractType == 'C') {
-            baseIncomeForTax = incomeMinusSocialSecurity;
-        }
-    }
+    protected void setTaxDeductibleExpenses() {}
 
     public void calculateInsuranceHealthTaxes() {
         socialHealthAmount = (incomeMinusSocialSecurity * SOC_HEALTH_RATE) / 100;
