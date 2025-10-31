@@ -1,0 +1,110 @@
+package com.bartoszwalter.students.taxes;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class TaxCalculatorTest {
+
+    private static final double DELTA = 1e-6;
+    private static final double roundDELTA = 1e-3;
+
+    private static void runFullPipeline(TaxCalculator tc) {
+        tc.calculateSecurityHealthTaxes();
+        tc.calculateInsuranceHealthTaxes();
+        tc.setBaseIncomeForTax();
+        tc.setTaxDeductiblExpensese();
+        tc.calculateTaxableIncome();
+        tc.calculateAdvanceTax();
+        tc.calculateReducedAdvanceTax();
+        tc.calculateTotalTaxes();
+        tc.calculateNetIncome();
+    }
+
+    @Test
+    @DisplayName("Employment E: gross 1000 → expected components and net")
+    void employmentExample() {
+        TaxCalculator tc = new TaxCalculator(1000.00, 'E');
+        runFullPipeline(tc);
+
+        assertEquals(97.60, tc.socialPensionAmount, DELTA);
+        assertEquals(15.00, tc.socialHealthAmount, DELTA);
+        assertEquals(24.50, tc.socialSicknessAmount, DELTA);
+
+        // income minus social security
+        double baseHealth = 1000.00 - (97.60 + 15.00 + 24.50);
+        assertEquals(baseHealth, tc.incomeMinusSocialSecurity, DELTA);
+
+        // health insurance
+        assertEquals(77.661, tc.soc_health1, DELTA);
+        assertEquals(66.8747499, tc.soc_health2, DELTA);
+
+        // taxable base and tax
+        assertEquals(1000.00 - 111.25, tc.taxableIncome, DELTA);
+        assertEquals(159.975, tc.advanceTax, DELTA);
+
+        // reduced advance tax and totals
+        assertEquals(46.7702501, tc.reducedAdvanceTax, DELTA);
+        assertEquals(261.53125, tc.totalTaxes, DELTA);
+        assertEquals(738.46875, tc.netIncome, DELTA);
+    }
+
+    @Test
+    @DisplayName("Civil C: gross 1000 → expected components and net")
+    void civilExample() {
+        TaxCalculator tc = new TaxCalculator(1000.00, 'C');
+        runFullPipeline(tc);
+
+        assertEquals(97.60, tc.socialPensionAmount, DELTA);
+        assertEquals(15.00, tc.socialHealthAmount, DELTA);
+        assertEquals(24.50, tc.socialSicknessAmount, DELTA);
+
+        double baseHealth = 1000.00 - (97.60 + 15.00 + 24.50);
+        assertEquals(baseHealth, tc.incomeMinusSocialSecurity, DELTA);
+
+        assertEquals(77.661, tc.soc_health1, DELTA);
+        assertEquals(66.8747499, tc.soc_health2, DELTA);
+
+        // tax-deductible expenses = 20% of baseHealth
+        assertEquals(690.31999999999, tc.taxableIncome, DELTA);
+
+        // PIT before relief
+        assertEquals(124.25759999999998, tc.advanceTax, DELTA);
+
+        // reduced advance tax and net
+        assertEquals(124.25759999999998 - 66.8747499, tc.reducedAdvanceTax, DELTA);
+
+        double expectedTotalTaxes = 97.60 + 15.00 + 24.50 + 77.661 + 57.38284999999999;
+        assertEquals(expectedTotalTaxes, tc.totalTaxes, DELTA);
+        assertEquals(727.856150, tc.netIncome, DELTA);
+    }
+
+    @Test
+    @DisplayName("Employment E: gross 256846 → matches program outputs")
+    void employmentExample_2() {
+        TaxCalculator tc = new TaxCalculator(256846.00, 'E');
+        runFullPipeline(tc);
+
+        // social contributions
+        assertEquals(25068.1696, tc.socialPensionAmount, DELTA);
+        assertEquals(3852.69,     tc.socialHealthAmount, DELTA);
+        assertEquals(6292.727000000001, tc.socialSicknessAmount, DELTA);
+
+        // health base
+        assertEquals(221632.4134, tc.incomeMinusSocialSecurity, DELTA);
+
+        // health insurance
+        assertEquals(19946.917206,  tc.soc_health1, DELTA);      // 9%
+        assertEquals(17176.5120385, tc.soc_health2, DELTA);      // 7.75%
+
+        // taxable base and PIT
+        assertEquals(256734.75, tc.taxableIncome, DELTA);
+        assertEquals(46212.255, tc.advanceTax, DELTA);
+
+        // reduced advance tax and totals
+        assertEquals(28989.4129615, tc.reducedAdvanceTax, DELTA);
+        assertEquals(84149.9167675, tc.totalTaxes, DELTA);
+        assertEquals(172696.0832325, tc.netIncome, DELTA);
+    }
+}
